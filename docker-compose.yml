@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: ghcr.io/tn8or/rabbitmq:main
+    container_name: rabbitmq
+    ports:
+      - 5672:5672 # AMQP protocol port
+      - 15672:15672 # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - servicenet
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+      placement:
+        constraints:
+          - node.labels.corebox == true
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.50.2,nfsvers=3,rw"
+      device: ":/storpool/kubenfs/rabbitmq_data"
+
+networks:
+  servicenet:
+    external: true
