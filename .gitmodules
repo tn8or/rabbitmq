@@ -1,3 +1,0 @@
-[submodule "rabbitmq"]
-	path = rabbitmq
-	url = https://github.com/docker-library/rabbitmq.git
